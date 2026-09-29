@@ -2,92 +2,66 @@
 
 namespace App\Controllers;
 
-use App\Models\CustomerAccountModel;
 
-class CustomerAccounts extends BaseController
+
+class Contact extends BaseController
 {
-    protected $customerModel;
+public function index(): string
+{
+$data = [
+'title' => 'Contact Us - PowerFlow Electric',
+'page' => 'contact',
+'success' => session()->getFlashdata('success'),
+'error' => session()->getFlashdata('error'),
+'validation' => session()->getFlashdata('validation')
+];
 
-    public function __construct()
-    {
-        $this->customerModel = new CustomerAccountModel();
-    }
+// Handle form submission
+if ($this->request->getMethod() === 'POST') {
+return $this->submitForm();
+}
 
-    public function index()
-    {
-        $keyword = $this->request->getGet('search');
-        $status = $this->request->getGet('status');
-        $type = $this->request->getGet('type');
+return view('contact', $data);
+}
 
-        $perPage = 10;
+private function submitForm()
+{
+$validation = \Config\Services::validation();
 
-        if ($keyword) {
+$validation->setRules([
+'name' => 'required|min_length[2]|max_length[100]',
+'email' => 'required|valid_email',
+'phone' => 'required|min_length[10]|max_length[20]',
+'service_type' => 'required',
 
-            $accounts = $this->customerModel
-                ->searchAccounts($keyword, $perPage);
 
-        } elseif ($status) {
 
-            $accounts = $this->customerModel
-                ->getAccountsByStatus($status, $perPage);
+'message' => 'required|min_length[10]|max_length[1000]'
+]);
 
-        } elseif ($type) {
+if (!$validation->withRequest($this->request)->run()) {
+session()->setFlashdata('validation', $validation->getErrors());
+return redirect()->back()->withInput();
+}
 
-            $accounts = $this->customerModel
-                ->getAccountsByType($type, $perPage);
+// In a real application, you would save to database or send email
+// For this demo, we'll just show a success message
+$contactData = [
+'name' => $this->request->getPost('name'),
+'email' => $this->request->getPost('email'),
+'phone' => $this->request->getPost('phone'),
+'service_type' => $this->request->getPost('service_type'),
+'message' => $this->request->getPost('message'),
+'created_at' => date('Y-m-d H:i:s')
+];
 
-        } else {
+// Here you would typically:
+// 1. Save to database
+// 2. Send email notification
+// 3. Send auto-reply to customer
 
-            $accounts = $this->customerModel
-                ->getAccountsPaginated($perPage);
-        }
-
-        $data = [
-            'title' => 'Customer Accounts - Puihaha Electric',
-            'page' => 'accounts',
-
-            'accounts' => $accounts,
-            'pager' => $this->customerModel->pager,
-
-            'total_accounts' =>
-                $this->customerModel->getTotalAccounts(),
-
-            'active_accounts' =>
-                $this->customerModel->getCountByStatus('active'),
-
-            'inactive_accounts' =>
-                $this->customerModel->getCountByStatus('inactive'),
-
-            'suspended_accounts' =>
-                $this->customerModel->getCountByStatus('suspended'),
-
-            'current_page' =>
-                (int) ($this->request->getGet('page') ?? 1),
-
-            'search_keyword' => $keyword,
-            'filter_status' => $status,
-            'filter_type' => $type
-        ];
-
-        return view('customer_accounts', $data);
-    }
-
-    public function viewAccount($id)
-    {
-        $account = $this->customerModel->find($id);
-
-        if (!$account) {
-            return redirect()
-                ->to('/accounts')
-                ->with('error', 'Account not found');
-        }
-
-        $data = [
-            'title' => 'Account Details - Puihaha Electric',
-            'page' => 'accounts',
-            'account' => $account
-        ];
-
-        return view('account_details', $data);
-    }
+session()->setFlashdata('success', 'Thank you for your message! We will contact you within 24
+hours.');
+return redirect()->to('/contact');
+}
 }
