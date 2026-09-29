@@ -163,6 +163,22 @@ background-color: var(--light-color) !important;
 <li class="nav-item">
 <a class="nav-link <?= (isset($page) && $page == 'register') ? 'active' : '' ?>" href="<?= base_url('register') ?>">Register</a>
 </li>
+<li class="nav-item">
+    <a
+        class="nav-link <?= (isset($page) && $page == 'accounts') ? 'active' : '' ?>"
+        href="<?= base_url('accounts') ?>"
+    >
+        Accounts
+    </a>
+</li>
+<li class="nav-item">
+    <a
+        class="nav-link <?= (isset($page) && $page == 'login') ? 'active' : '' ?>"
+        href="<?= base_url('login') ?>"
+    >
+        Login
+    </a>
+</li>
 </ul>
 </div>
 </div>

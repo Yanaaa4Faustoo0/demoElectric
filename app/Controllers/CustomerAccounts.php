@@ -22,22 +22,18 @@ class CustomerAccounts extends BaseController
         $perPage = 10;
 
         if ($keyword) {
-
             $accounts = $this->customerModel
                 ->searchAccounts($keyword, $perPage);
 
         } elseif ($status) {
-
             $accounts = $this->customerModel
                 ->getAccountsByStatus($status, $perPage);
 
         } elseif ($type) {
-
             $accounts = $this->customerModel
                 ->getAccountsByType($type, $perPage);
 
         } else {
-
             $accounts = $this->customerModel
                 ->getAccountsPaginated($perPage);
         }
@@ -73,21 +69,22 @@ class CustomerAccounts extends BaseController
     }
 
     public function viewAccount($id)
-    {
-        $account = $this->customerModel->find($id);
+{
+    $account = $this->customerModel->find($id);
 
-        if (!$account) {
-            return redirect()
-                ->to('/accounts')
-                ->with('error', 'Account not found');
-        }
-
-        $data = [
-            'title' => 'Account Details - Puihaha Electric',
-            'page' => 'accounts',
-            'account' => $account
-        ];
-
-        return view('account_details', $data);
+    if (!$account) {
+        return redirect()
+            ->to('/accounts')
+            ->with('error', 'Account not found');
     }
+
+    $data = [
+        'title' => 'Account Details - Puihaha Electric',
+        'page' => 'accounts',
+        'account' => $account
+    ];
+
+    return view('account_details', $data);
+}
+
 }
