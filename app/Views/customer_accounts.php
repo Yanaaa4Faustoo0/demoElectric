@@ -4,6 +4,8 @@
 
 <style>
 
+
+
 .accounts-section {
     background: #f8fafc;
     min-height: 80vh;
@@ -17,7 +19,12 @@
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
 }
 
-/* Header */
+
+
+
+.accounts-header {
+    margin-bottom: 30px;
+}
 
 .accounts-header h1 {
     color: #2850b5;
@@ -27,25 +34,44 @@
 
 .accounts-header p {
     color: #777;
-    margin-bottom: 30px;
+    margin-bottom: 0;
 }
 
-/* Statistics */
+
+
+
+.add-account-button {
+    background: #f6a000;
+    border: none;
+    color: white;
+    border-radius: 25px;
+    padding: 10px 20px;
+    font-weight: 600;
+}
+
+.add-account-button:hover {
+    background: #df8e00;
+    color: white;
+}
+
+
+
 
 .stats-card {
+    color: white;
     border-radius: 15px;
     padding: 20px;
-    color: white;
     margin-bottom: 20px;
 }
 
 .stats-card h2 {
+    margin: 0;
     font-size: 30px;
-    margin-bottom: 5px;
+    font-weight: 700;
 }
 
 .stats-card p {
-    margin: 0;
+    margin: 5px 0 0;
 }
 
 .card-total {
@@ -65,7 +91,8 @@
     color: #222;
 }
 
-/* Search */
+
+
 
 .search-box {
     background: #f8f9fa;
@@ -74,7 +101,14 @@
     margin-bottom: 25px;
 }
 
-/* Table */
+
+/* =========================
+   TABLE
+   ========================= */
+
+.table-container {
+    overflow-x: auto;
+}
 
 .table thead th {
     white-space: nowrap;
@@ -84,7 +118,16 @@
     vertical-align: middle;
 }
 
-/* Pagination */
+.customer-row {
+    cursor: default;
+}
+
+.customer-row:hover {
+    background-color: #f8fafc;
+}
+
+
+
 
 .pagination-card {
     margin-top: 35px;
@@ -92,9 +135,9 @@
 
     border-radius: 0 0 24px 24px;
 
-    padding: 25px 30px;
+    min-height: 110px;
 
-    min-height: 100px;
+    padding: 30px 32px;
 
     display: flex;
     align-items: center;
@@ -106,8 +149,8 @@
 }
 
 .pagination-info {
+    font-size: 18px;
     color: #111827;
-    font-size: 17px;
 }
 
 .pagination-numbers {
@@ -124,17 +167,22 @@
     min-width: 32px;
     height: 32px;
 
-    color: #2563eb;
+    padding: 0 6px;
+
+    font-size: 18px;
 
     text-decoration: none;
 
-    font-size: 17px;
+    color: #2563eb;
+
+    background: transparent;
 
     border-radius: 6px;
 }
 
 .pagination-number:hover {
     background: #f1f5f9;
+    color: #1d4ed8;
 }
 
 .pagination-number.active {
@@ -142,14 +190,75 @@
     font-weight: 700;
 }
 
-/* Mobile */
+
+
+
+.customer-context-menu {
+    position: fixed;
+
+    display: none;
+
+    min-width: 190px;
+
+    background: #ffffff;
+
+    border-radius: 10px;
+
+    padding: 6px 0;
+
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+
+    border: 1px solid #eeeeee;
+
+    z-index: 9999;
+}
+
+.customer-context-menu a,
+.customer-context-menu button {
+    display: block;
+
+    width: 100%;
+
+    padding: 10px 15px;
+
+    border: none;
+
+    background: transparent;
+
+    text-align: left;
+
+    text-decoration: none;
+
+    color: #222;
+
+    font-size: 14px;
+
+    cursor: pointer;
+}
+
+.customer-context-menu a:hover,
+.customer-context-menu button:hover {
+    background: #f3f4f6;
+}
+
+.customer-context-menu .delete-item {
+    color: #dc3545;
+}
+
+
+
 
 @media (max-width: 768px) {
 
+    .accounts-header {
+        flex-direction: column;
+        align-items: flex-start !important;
+    }
+
     .pagination-card {
         flex-direction: column;
-        gap: 20px;
         align-items: flex-start;
+        gap: 20px;
     }
 
 }
@@ -163,22 +272,73 @@
 
         <div class="accounts-container">
 
-            <!-- Header -->
 
-            <div class="accounts-header">
+          
 
-                <h1>
-                    Customer Accounts
-                </h1>
+            <div class="accounts-header d-flex justify-content-between align-items-center">
 
-                <p>
-                    Puihaha Electric Customer Account Management
-                </p>
+                <div>
+
+                    <h1>
+                        Customer Accounts
+                    </h1>
+
+                    <p>
+                        Puihaha Electric Customer Account Management
+                    </p>
+
+                </div>
+
+
+                <a
+                    href="<?= base_url('accounts/create') ?>"
+                    class="btn add-account-button"
+                >
+                    + Add Account
+                </a>
 
             </div>
 
 
-            <!-- Statistics -->
+         
+
+            <?php if (session()->getFlashdata('success')): ?>
+
+                <div class="alert alert-success alert-dismissible fade show">
+
+                    <?= esc(session()->getFlashdata('success')) ?>
+
+                    <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="alert"
+                    ></button>
+
+                </div>
+
+            <?php endif; ?>
+
+
+            
+
+            <?php if (session()->getFlashdata('error')): ?>
+
+                <div class="alert alert-danger alert-dismissible fade show">
+
+                    <?= esc(session()->getFlashdata('error')) ?>
+
+                    <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="alert"
+                    ></button>
+
+                </div>
+
+            <?php endif; ?>
+
+
+            
 
             <div class="row">
 
@@ -252,7 +412,7 @@
             </div>
 
 
-            <!-- Search -->
+            
 
             <div class="search-box">
 
@@ -262,6 +422,7 @@
                 >
 
                     <div class="row g-3">
+
 
                         <!-- Search -->
 
@@ -323,7 +484,7 @@
                         </div>
 
 
-                        <!-- Type -->
+                        <!-- Connection Type -->
 
                         <div class="col-md-3">
 
@@ -368,7 +529,7 @@
                         </div>
 
 
-                        <!-- Search button -->
+                      
 
                         <div class="col-md-2">
 
@@ -386,7 +547,7 @@
                 </form>
 
 
-                <!-- Clear -->
+                
 
                 <?php if (
                     $search_keyword ||
@@ -410,11 +571,11 @@
             </div>
 
 
-            <!-- Customer Table -->
+            
 
-            <div class="table-responsive">
+            <div class="table-container">
 
-                <table class="table table-hover">
+                <table class="table table-hover align-middle">
 
                     <thead class="table-dark">
 
@@ -445,7 +606,7 @@
                             </th>
 
                             <th>
-                                Action
+                                Actions
                             </th>
 
                         </tr>
@@ -455,136 +616,203 @@
 
                     <tbody>
 
-                        <?php if (empty($accounts)): ?>
+                    <?php if (empty($accounts)): ?>
 
-                            <tr>
+                        <tr>
 
-                                <td
-                                    colspan="7"
-                                    class="text-center text-muted py-4"
-                                >
-                                    No customer accounts found.
+                            <td
+                                colspan="7"
+                                class="text-center text-muted py-5"
+                            >
+                                No customer accounts found.
+                            </td>
+
+                        </tr>
+
+                    <?php else: ?>
+
+
+                        <?php foreach ($accounts as $account): ?>
+
+                            <tr
+                                class="customer-row"
+                                data-id="<?= esc($account['id']) ?>"
+                                data-name="<?= esc($account['customer_name']) ?>"
+                            >
+
+
+                                
+
+                                <td>
+
+                                    <strong>
+                                        <?= esc(
+                                            $account['account_number']
+                                        ) ?>
+                                    </strong>
+
+                                </td>
+
+
+                               
+
+                                <td>
+
+                                    <?= esc(
+                                        $account['customer_name']
+                                    ) ?>
+
+                                </td>
+
+
+                                
+
+                                <td>
+
+                                    <?= esc(
+                                        $account['email']
+                                    ) ?>
+
+                                </td>
+
+
+                              
+
+                                <td>
+
+                                    <?= esc(
+                                        $account['phone']
+                                    ) ?>
+
+                                </td>
+
+
+                               
+
+                                <td>
+
+                                    <span class="badge bg-info text-dark">
+
+                                        <?= ucfirst(
+                                            esc(
+                                                $account['connection_type']
+                                            )
+                                        ) ?>
+
+                                    </span>
+
+                                </td>
+
+
+                               
+
+                                <td>
+
+                                    <?php
+
+                                    $statusClass = match (
+                                        $account['status']
+                                    ) {
+
+                                        'active' =>
+                                            'bg-success',
+
+                                        'inactive' =>
+                                            'bg-danger',
+
+                                        'suspended' =>
+                                            'bg-warning text-dark',
+
+                                        default =>
+                                            'bg-secondary'
+
+                                    };
+
+                                    ?>
+
+                                    <span
+                                        class="badge <?= $statusClass ?>"
+                                    >
+
+                                        <?= ucfirst(
+                                            esc(
+                                                $account['status']
+                                            )
+                                        ) ?>
+
+                                    </span>
+
+                                </td>
+
+
+                              
+
+                                <td>
+
+
+                                  
+
+                                    <a
+                                        href="<?= base_url(
+                                            'account/' .
+                                            $account['id']
+                                        ) ?>"
+                                        class="btn btn-sm btn-outline-primary"
+                                    >
+                                        View
+                                    </a>
+
+
+                                   
+
+                                    <a
+                                        href="<?= base_url(
+                                            'accounts/edit/' .
+                                            $account['id']
+                                        ) ?>"
+                                        class="btn btn-sm btn-outline-warning"
+                                    >
+                                        Edit
+                                    </a>
+
+
+                                   
+
+                                    <form
+                                        method="POST"
+                                        action="<?= base_url(
+                                            'accounts/delete/' .
+                                            $account['id']
+                                        ) ?>"
+                                        class="d-inline"
+                                        onsubmit="return confirm('Are you sure you want to delete this customer account?');"
+                                    >
+
+                                        <?= csrf_field() ?>
+
+                                        <button
+                                            type="submit"
+                                            class="btn btn-sm btn-outline-danger"
+                                        >
+                                            Delete
+                                        </button>
+
+                                    </form>
+
+
                                 </td>
 
                             </tr>
 
-                        <?php else: ?>
+                        <?php endforeach; ?>
 
-                            <?php foreach ($accounts as $account): ?>
-
-                                <tr>
-
-                                    <td>
-                                        <strong>
-                                            <?= esc(
-                                                $account['account_number']
-                                            ) ?>
-                                        </strong>
-                                    </td>
-
-
-                                    <td>
-                                        <?= esc(
-                                            $account['customer_name']
-                                        ) ?>
-                                    </td>
-
-
-                                    <td>
-                                        <?= esc(
-                                            $account['email']
-                                        ) ?>
-                                    </td>
-
-
-                                    <td>
-                                        <?= esc(
-                                            $account['phone']
-                                        ) ?>
-                                    </td>
-
-
-                                    <td>
-
-                                        <span class="badge bg-info text-dark">
-
-                                            <?= ucfirst(
-                                                esc(
-                                                    $account['connection_type']
-                                                )
-                                            ) ?>
-
-                                        </span>
-
-                                    </td>
-
-
-                                    <td>
-
-                                        <?php
-
-                                            $statusClass =
-                                                match (
-                                                    $account['status']
-                                                ) {
-                                                    'active' =>
-                                                        'bg-success',
-
-                                                    'inactive' =>
-                                                        'bg-danger',
-
-                                                    'suspended' =>
-                                                        'bg-warning text-dark',
-
-                                                    default =>
-                                                        'bg-secondary'
-                                                };
-
-                                        ?>
-
-                                        <span
-                                            class="badge <?= $statusClass ?>"
-                                        >
-
-                                            <?= ucfirst(
-                                                esc(
-                                                    $account['status']
-                                                )
-                                            ) ?>
-
-                                        </span>
-
-                                    </td>
-
-
-                                    <td>
-
-                                        <a
-                                            href="<?= base_url(
-                                                'account/' .
-                                                $account['id']
-                                            ) ?>"
-                                            class="btn btn-sm btn-outline-primary"
-                                        >
-                                            View
-                                        </a>
-
-                                    </td>
-
-                                </tr>
-
-                            <?php endforeach; ?>
-
-                        <?php endif; ?>
+                    <?php endif; ?>
 
                     </tbody>
 
                 </table>
 
             </div>
-
-
-            <!-- Pagination -->
 
             <?php if ($pager): ?>
 
@@ -600,11 +828,14 @@
 
                 <div class="pagination-card">
 
+
                     <div class="pagination-info">
 
                         Page
                         <?= $currentPage ?>
+
                         of
+
                         <?= $totalPages ?>
 
                     </div>
@@ -638,8 +869,7 @@
                                 href="<?= base_url(
                                     'accounts?' . $query
                                 ) ?>"
-                                class="pagination-number
-                                <?= $page === $currentPage
+                                class="pagination-number <?= $page === $currentPage
                                     ? 'active'
                                     : '' ?>"
                             >
@@ -654,11 +884,269 @@
 
             <?php endif; ?>
 
+
         </div>
 
     </div>
 
 </section>
 
+
+<div
+    id="customerContextMenu"
+    class="customer-context-menu"
+>
+
+    <a
+        id="contextView"
+        href="#"
+    >
+        View Customer
+    </a>
+
+
+    <a
+        id="contextEdit"
+        href="#"
+    >
+        Edit Customer
+    </a>
+
+
+    <button
+        type="button"
+        id="contextDelete"
+        class="delete-item"
+    >
+        Delete Customer
+    </button>
+
+</div>
+
+
+<script>
+
+document.addEventListener(
+    'DOMContentLoaded',
+    function () {
+
+        const menu =
+            document.getElementById(
+                'customerContextMenu'
+            );
+
+        const viewLink =
+            document.getElementById(
+                'contextView'
+            );
+
+        const editLink =
+            document.getElementById(
+                'contextEdit'
+            );
+
+        const deleteButton =
+            document.getElementById(
+                'contextDelete'
+            );
+
+        let selectedId = null;
+
+
+
+        document
+            .querySelectorAll('.customer-row')
+            .forEach(function (row) {
+
+                row.addEventListener(
+                    'contextmenu',
+                    function (event) {
+
+                        event.preventDefault();
+
+
+                        selectedId =
+                            row.dataset.id;
+
+
+                        
+
+                        viewLink.href =
+                            '<?= base_url('account/') ?>'
+                            + selectedId;
+
+
+                        
+
+                        editLink.href =
+                            '<?= base_url('accounts/edit/') ?>'
+                            + selectedId;
+
+
+                        menu.style.display =
+                            'block';
+
+
+
+                        let left =
+                            event.clientX;
+
+                        let top =
+                            event.clientY;
+
+
+                        const menuWidth =
+                            menu.offsetWidth;
+
+                        const menuHeight =
+                            menu.offsetHeight;
+
+
+                        if (
+                            left + menuWidth >
+                            window.innerWidth
+                        ) {
+
+                            left =
+                                window.innerWidth -
+                                menuWidth -
+                                10;
+
+                        }
+
+
+                        if (
+                            top + menuHeight >
+                            window.innerHeight
+                        ) {
+
+                            top =
+                                window.innerHeight -
+                                menuHeight -
+                                10;
+
+                        }
+
+
+                        menu.style.left =
+                            left + 'px';
+
+                        menu.style.top =
+                            top + 'px';
+
+                    }
+                );
+
+            });
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Delete from context menu
+        |--------------------------------------------------------------------------
+        */
+
+        deleteButton.addEventListener(
+            'click',
+            function () {
+
+                if (!selectedId) {
+                    return;
+                }
+
+
+                const confirmDelete =
+                    confirm(
+                        'Are you sure you want to delete this customer account?'
+                    );
+
+
+                if (!confirmDelete) {
+                    return;
+                }
+
+
+                const form =
+                    document.createElement(
+                        'form'
+                    );
+
+
+                form.method = 'POST';
+
+
+                form.action =
+                    '<?= base_url('accounts/delete/') ?>'
+                    + selectedId;
+
+
+                /*
+                | CSRF token
+                */
+
+                const csrfInput =
+                    document.createElement(
+                        'input'
+                    );
+
+
+                csrfInput.type =
+                    'hidden';
+
+
+                csrfInput.name =
+                    '<?= csrf_token() ?>';
+
+
+                csrfInput.value =
+                    '<?= csrf_hash() ?>';
+
+
+                form.appendChild(
+                    csrfInput
+                );
+
+
+                document.body.appendChild(
+                    form
+                );
+
+
+                form.submit();
+
+            }
+        );
+
+        document.addEventListener(
+            'click',
+            function (event) {
+
+                if (
+                    !menu.contains(event.target)
+                ) {
+
+                    menu.style.display =
+                        'none';
+
+                }
+
+            }
+        );
+
+
+        window.addEventListener(
+            'scroll',
+            function () {
+
+                menu.style.display =
+                    'none';
+
+            }
+        );
+
+    }
+);
+
+</script>
 
 <?= $this->endSection() ?>
